@@ -7,10 +7,11 @@ import (
 )
 
 var db = new(sql.DB)
+var stmtIns = new(sql.Stmt)
 
-//подключение к базе
+//Подключение к базе
 func OnStart() {
-	db, err := sql.Open("mysql", "JESUS:18091996@/anime?charset=utf8")
+	db, err := sql.Open("mysql", "root:18091996@/anime?charset=utf8")
 	err = db.Ping()
 	if err != nil {
 		panic(err.Error())
@@ -18,11 +19,16 @@ func OnStart() {
 }
 
 //Увеличение счетчика
-func Update(userid int, count int) {
-	db.Query("update users set labels=", count, "where userid=", userid)
+func Update(userid string, count int) {
+	stmtIns, err := db.Prepare("insert into testint values (?, ?)")
+	_, err = stmtIns.Exec(1488, count)
+	if err != nil {
+		panic(err.Error())
+	}
+	//db.Query("insert into users (char,int) values(", userid, count, ")")
 }
 
 //Удаление пользователя
-func Delete(userid int) {
+func Delete(userid string) {
 	db.Query("delete from users where userid=", userid)
 }
