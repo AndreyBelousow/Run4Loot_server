@@ -7,8 +7,6 @@ import (
 
 	"fmt"
 
-	"log"
-
 	"net/http"
 
 	"github.com/go-martini/martini"
@@ -16,41 +14,34 @@ import (
 
 func main() {
 
-	//Режим работы, продакшн или нет
-	//prod := false
-
 	m := martini.Classic()
-
-	//if prod {
-	controllers.StartBase()
 
 	//Обращение к табличке с результатами
 	m.Get("/table", controllers.ShowUsersTable)
 
 	//Увеличение счетчика у пользователя, стоит заменить на POST
-	m.Get("/", func(req *http.Request) {
+	m.Get("/update", func(req *http.Request) {
 		requrl := req.URL.Query()
 		userid := requrl.Get("id")
 		count, err := strconv.Atoi(requrl.Get("count"))
 		if err != nil {
-			log.Fatal(err)
+			fmt.Println(err)
 		}
-
-		fmt.Println(userid)
-		fmt.Println(count)
-
 		controllers.Update(userid, count)
+		fmt.Println("__________________________________________")
+		fmt.Println("UPDATED id:", userid, " count:", count)
+		fmt.Println("__________________________________________")
 	})
 
 	//Удаление пользователя
-	m.Delete("/", func(req *http.Request) {
+	m.Get("/delete", func(req *http.Request) {
 		requrl := req.URL.Query()
 		userid := requrl.Get("id")
 		controllers.Delete(userid)
+		fmt.Println("__________________________________________")
+		fmt.Println("DELETED id:", userid)
+		fmt.Println("__________________________________________")
 	})
-	//} else {
-	//	m.Get("/table")
-	//}
 
 	m.Run()
 }

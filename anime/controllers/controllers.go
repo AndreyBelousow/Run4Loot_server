@@ -20,8 +20,3 @@ func Delete(userid string) {
 func ShowUsersTable() string {
 	return "ТУТ ТИПА ХТМЛ ТАБЛИЧКА С РЕЗУЛЬТАТАМИ"
 }
-
-//Подключение к базе
-func StartBase() {
-	database.OnStart()
-}
