@@ -4,25 +4,34 @@ import (
 	"database/sql"
 
 	_ "github.com/go-sql-driver/mysql"
+
+	"strconv"
 )
 
-var db = new(sql.DB)
-
-//подключение к базе
-func OnStart() {
-	db, err := sql.Open("mysql", "JESUS:18091996@/anime?charset=utf8")
+//Увеличение счетчика
+func Update(userid string, count int) {
+	db, err := sql.Open("mysql", "root:18091996@/anime?charset=utf8")
 	err = db.Ping()
 	if err != nil {
 		panic(err.Error())
 	}
-}
-
-//Увеличение счетчика
-func Update(userid int, count int) {
-	db.Query("update users set labels=", count, "where userid=", userid)
+	kek, err := strconv.Atoi(userid)
+	stmtIns, err := db.Prepare("insert into testint values (?, ?)")
+	_, err = stmtIns.Exec(kek, count)
+	stmtUpd, err := db.Prepare("update testint set labels = ? where userid = ?")
+	_, err = stmtUpd.Exec(count, kek)
+	defer db.Close()
 }
 
 //Удаление пользователя
-func Delete(userid int) {
-	db.Query("delete from users where userid=", userid)
+func Delete(userid string) {
+	db, err := sql.Open("mysql", "root:18091996@/anime?charset=utf8")
+	err = db.Ping()
+	if err != nil {
+		panic(err.Error())
+	}
+	kek, err := strconv.Atoi(userid)
+	stmtDel, err := db.Prepare("delete from testint where userid=?")
+	_, err = stmtDel.Exec(kek)
+	defer db.Close()
 }
