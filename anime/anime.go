@@ -14,7 +14,14 @@ import (
 
 func main() {
 
+	//Джисус, таск по серверу:
+	//в ответ на запрос приходит код, обозначающий,
+	//может ли работать приложение. логика тупейшая:
+	//если vremya < nachalo_festa тогда вернуть 1488 иначе вернуть 200
+
 	m := martini.Classic()
+	
+	canWork bool := false;
 
 	//Обращение к табличке с результатами
 	m.Get("/table", controllers.ShowUsersTable)
