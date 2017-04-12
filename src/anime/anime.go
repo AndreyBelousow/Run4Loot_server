@@ -61,11 +61,12 @@ func main() {
 			fmt.Println("__________________________________________")
 			fmt.Println("UPDATED id:", userid, " count:", count)
 			fmt.Println("__________________________________________")
+		} else {
+			res.WriteHeader(1488)
+			fmt.Println("__________________________________________")
+			fmt.Println("ACESS DENIED")
+			fmt.Println("__________________________________________")
 		}
-		res.WriteHeader(1488)
-		fmt.Println("__________________________________________")
-		fmt.Println("ACESS DENIED")
-		fmt.Println("__________________________________________")
 	})
 
 	//Удаление пользователя
@@ -78,11 +79,12 @@ func main() {
 			fmt.Println("__________________________________________")
 			fmt.Println("DELETED id:", userid)
 			fmt.Println("__________________________________________")
+		} else {
+			res.WriteHeader(1488)
+			fmt.Println("__________________________________________")
+			fmt.Println("ACESS DENIED")
+			fmt.Println("__________________________________________")
 		}
-		res.WriteHeader(1488)
-		fmt.Println("__________________________________________")
-		fmt.Println("ACESS DENIED")
-		fmt.Println("__________________________________________")
 	})
 
 	m.Run()
