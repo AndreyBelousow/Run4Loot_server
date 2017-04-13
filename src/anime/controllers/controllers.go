@@ -1,8 +1,6 @@
 package controllers
 
-"anime/database"
-
-//"anime/view"
+import "anime/database"
 
 //Увеличение счетчика у пользователя
 func Update(userid string, count int) string {
