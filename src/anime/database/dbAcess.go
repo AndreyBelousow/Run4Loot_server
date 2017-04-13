@@ -35,3 +35,52 @@ func Delete(userid string) {
 	_, err = stmtDel.Exec(kek)
 	defer db.Close()
 }
+
+func Kek() string {
+
+	//Сюда собираем хтмл страничку
+	page := "<html><head></head><body>"
+
+	db, err := sql.Open("mysql", "root:18091996@/anime?charset=utf8")
+	err = db.Ping()
+	if err != nil {
+		panic(err.Error())
+	}
+
+	rows, err := db.Query("select * from testint order by labels desc")
+
+	columns, err := rows.Columns()
+
+	values := make([]sql.RawBytes, len(columns))
+
+	scanArgs := make([]interface{}, len(values))
+	for i := range values {
+		scanArgs[i] = &values[i]
+	}
+
+	for rows.Next() {
+		err = rows.Scan(scanArgs...)
+		if err != nil {
+			panic(err.Error())
+		}
+
+		var value string
+		for i, col := range values {
+			if col == nil {
+				value = "NULL"
+			} else {
+				value = string(col)
+			}
+			page += columns[i] + ": " + value + "<br>"
+		}
+		page += "<br>"
+	}
+	if err = rows.Err(); err != nil {
+		panic(err.Error())
+	}
+
+	defer db.Close()
+
+	page += "</body></html>"
+	return page
+}

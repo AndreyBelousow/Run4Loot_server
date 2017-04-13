@@ -18,5 +18,5 @@ func Delete(userid string) {
 
 //Показать табличку с результатами
 func ShowUsersTable() string {
-	return "ТУТ ТИПА ХТМЛ ТАБЛИЧКА С РЕЗУЛЬТАТАМИ"
+	return database.Kek()
 }
