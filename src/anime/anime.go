@@ -25,6 +25,7 @@ func main() {
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Println("ALLOW ACESS? [y/n]")
 
+	//ДА да, именно так в го пишется while(true)
 	flag := true
 	for flag {
 		char, _, err := reader.ReadRune()
@@ -44,11 +45,39 @@ func main() {
 		}
 	}
 
+	//Переключение режима работы
+	m.Get("/switch", func(res http.ResponseWriter, req *http.Request) string {
+		requrl := req.URL.Query()
+		pass := requrl.Get("pass")
+		if pass == "kek" {
+			canWork = !canWork
+			if canWork {
+				fmt.Println("__________________________________________")
+				fmt.Println("SERVER  IS ONLINE NOW")
+				fmt.Println("__________________________________________")
+				return "SWITCHED ONLINE"
+			} else {
+				fmt.Println("__________________________________________")
+				fmt.Println("SERVER  IS OFFLINE NOW")
+				fmt.Println("__________________________________________")
+				return "SWITCHED OFFLINE"
+			}
+		} else {
+			return "INCORRECT PASSWORD"
+		}
+	})
+
 	//Обращение к табличке с результатами
-	m.Get("/table", controllers.ShowUsersTable)
+	m.Get("/table", func(res http.ResponseWriter) string {
+		if canWork {
+			return controllers.ShowUsersTable()
+		} else {
+			return "SERVER OFFLINE"
+		}
+	})
 
 	//Увеличение счетчика у пользователя
-	m.Get("/update", func(res http.ResponseWriter, req *http.Request) {
+	m.Get("/update", func(res http.ResponseWriter, req *http.Request) string {
 		if canWork {
 			requrl := req.URL.Query()
 			userid := requrl.Get("id")
@@ -61,16 +90,18 @@ func main() {
 			fmt.Println("__________________________________________")
 			fmt.Println("UPDATED id:", userid, " count:", count)
 			fmt.Println("__________________________________________")
+			return "UPDATED:" + userid
 		} else {
 			res.WriteHeader(1488)
 			fmt.Println("__________________________________________")
 			fmt.Println("ACESS DENIED")
 			fmt.Println("__________________________________________")
+			return "SERVER OFFLINE"
 		}
 	})
 
 	//Удаление пользователя
-	m.Get("/delete", func(res http.ResponseWriter, req *http.Request) {
+	m.Get("/delete", func(res http.ResponseWriter, req *http.Request) string {
 		if canWork {
 			requrl := req.URL.Query()
 			userid := requrl.Get("id")
@@ -79,11 +110,14 @@ func main() {
 			fmt.Println("__________________________________________")
 			fmt.Println("DELETED id:", userid)
 			fmt.Println("__________________________________________")
+			return "DELETED:" + userid
+
 		} else {
 			res.WriteHeader(1488)
 			fmt.Println("__________________________________________")
 			fmt.Println("ACESS DENIED")
 			fmt.Println("__________________________________________")
+			return "SERVER OFFLINE"
 		}
 	})
 
