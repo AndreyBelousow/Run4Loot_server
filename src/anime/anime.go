@@ -70,8 +70,10 @@ func main() {
 	//Обращение к табличке с результатами
 	m.Get("/table", func(res http.ResponseWriter) string {
 		if canWork {
+			res.WriteHeader(200)
 			return controllers.ShowUsersTable()
 		} else {
+			res.WriteHeader(1488)
 			return "SERVER OFFLINE"
 		}
 	})
